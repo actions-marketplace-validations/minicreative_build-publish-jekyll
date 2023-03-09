@@ -1,4 +1,4 @@
-name: Build Jeykll & Publish
+name: Build & Publish Jekyll to Kube
 
 on:
   push:

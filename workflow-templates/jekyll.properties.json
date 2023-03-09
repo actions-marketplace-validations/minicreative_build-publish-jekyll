@@ -1,0 +1,4 @@
+{
+    "name": "Build & Publish Jekyll to Kube",
+    "description": "Builds a Jekyll site, Dockerizes, pushes to DockerHub and updates Kube deployment"
+}
