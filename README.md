@@ -22,7 +22,23 @@ Provide the required variables and secrets:
 - `docker_name`: The full name of your DockerHub repository, e.g. "my-docker-name/my-repo-name"
 - `kube_deployment`: The name of your Kubernetes Deployment resource to update with your latest image tag
 
-## Sample Dockerfile
+### Sample workflow file
+```
+on: [push]
+jobs:
+  build-publish:
+    name: Build & Publish
+    uses: minicreative/build-publish-jekyll/.github/workflows/build-publish.yml@main
+    with:
+      docker_name: ${{ vars.docker_name }}
+      kube_deployment: ${{ vars.kube_deployment }}
+    secrets:
+      docker_username: ${{ vars.docker_username }}
+      docker_password: ${{ secrets.docker_password }}
+      kube_config: ${{ secrets.kube_config }}
+```
+
+### Sample Dockerfile
 ```
 FROM nginx:alpine
 COPY ./_site/ /usr/share/nginx/html
