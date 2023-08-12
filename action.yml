@@ -3,30 +3,27 @@ description: Minimalist action to build, dockerize and publish your Jekyll websi
 branding:
   icon: 'anchor'
   color: 'blue'
-inputs:
-  DOCKER_NAME:
-    description: The full name of your DockerHub repository, e.g. "my-docker-name/my-repo-name"
-    required: true
-  DOCKER_USERNAME:
-    description: Your DockerHub username
-    required: true
-  KUBE_DEPLOYMENT:
-    description: The name of your Kubernetes Deployment resource to update with your latest image tag
-    required: true
-secrets:
-  DOCKER_PASSWORD:
-    description: A Dockerhub Access Token with permissions to upload your container to Dockerhub
-    required: true
-  KUBE_CONFIG:
-    description: A base64 encded string of your Kubernetes cluster's config file
-    required: true
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
+  workflow_call:
+    inputs:
+      DOCKER_NAME:
+        description: The full name of your DockerHub repository, e.g. "my-docker-name/my-repo-name"
+        required: true
+      DOCKER_USERNAME:
+        description: Your DockerHub username
+        required: true
+      KUBE_DEPLOYMENT:
+        description: The name of your Kubernetes Deployment resource to update with your latest image tag
+        required: true
+    secrets:
+      DOCKER_PASSWORD:
+        description: A Dockerhub Access Token with permissions to upload your container to Dockerhub
+        required: true
+      KUBE_CONFIG:
+        description: A base64 encded string of your Kubernetes cluster's config file
+        required: true
+        
 env:
   KUBE_DEPLOYMENT: "${{ vars.KUBE_DEPLOYMENT }}"
   DOCKER_NAME: "${{ vars.DOCKER_NAME }}"
