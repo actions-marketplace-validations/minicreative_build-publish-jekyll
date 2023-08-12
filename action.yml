@@ -4,12 +4,6 @@ branding:
   icon: 'anchor'
   color: 'blue'
 inputs:
-  DOCKER_PASSWORD:
-    description: A Dockerhub Access Token with permissions to upload your container to Dockerhub
-    required: true
-  KUBE_CONFIG:
-    description: A base64 encded string of your Kubernetes cluster's config file
-    required: true
   DOCKER_NAME:
     description: The full name of your DockerHub repository, e.g. "my-docker-name/my-repo-name"
     required: true
@@ -18,6 +12,13 @@ inputs:
     required: true
   KUBE_DEPLOYMENT:
     description: The name of your Kubernetes Deployment resource to update with your latest image tag
+    required: true
+secrets:
+  DOCKER_PASSWORD:
+    description: A Dockerhub Access Token with permissions to upload your container to Dockerhub
+    required: true
+  KUBE_CONFIG:
+    description: A base64 encded string of your Kubernetes cluster's config file
     required: true
 
 on:
