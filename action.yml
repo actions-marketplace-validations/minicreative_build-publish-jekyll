@@ -1,5 +1,6 @@
 name: Build Jekyll & Publish to Kube
 description: Minimalist action to build, dockerize and publish your Jekyll website to Kubernetes.
+icon: anchor
 
 on:
   push:
