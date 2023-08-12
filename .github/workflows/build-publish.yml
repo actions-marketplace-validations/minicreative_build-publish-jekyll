@@ -4,12 +4,15 @@ on:
       DOCKER_NAME:
         description: The full name of your DockerHub repository, e.g. "my-docker-name/my-repo-name"
         required: true
+        type: string
       DOCKER_USERNAME:
         description: Your DockerHub username
         required: true
+        type: string
       KUBE_DEPLOYMENT:
         description: The name of your Kubernetes Deployment resource to update with your latest image tag
         required: true
+        type: string
     secrets:
       DOCKER_PASSWORD:
         description: A Dockerhub Access Token with permissions to upload your container to Dockerhub
