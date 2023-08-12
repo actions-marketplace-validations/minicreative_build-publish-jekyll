@@ -35,12 +35,12 @@ jobs:
     - name: Build Jekyll site
       run: bundle exec jekyll build
     - name: Login to Docker
-      uses: docker/login-action@v1
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.docker_username }}
         password: ${{ secrets.docker_password }}
     - name: Build and Push the Image
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v4
       with:
         context: .
         push: true
