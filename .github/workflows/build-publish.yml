@@ -1,28 +1,28 @@
 on:
   workflow_call:
     inputs:
-      docker-name:
+      docker_name:
         description: The full name of your DockerHub repository, e.g. "my-docker-name/my-repo-name"
         required: true
         type: string
-      docker-username:
+      docker_username:
         description: Your DockerHub username
         required: true
         type: string
-      kube-deployment:
+      kube_deployment:
         description: The name of your Kubernetes Deployment resource to update with your latest image tag
         required: true
         type: string
     secrets:
-      docker-password:
+      docker_password:
         description: A Dockerhub Access Token with permissions to upload your container to Dockerhub
         required: true
-      kube-config:
+      kube_config:
         description: A base64 encded string of your Kubernetes cluster's config file
         required: true
 
 env:
-  DOCKER_TAG: "${{ inputs.docker-name }}:${{ github.sha }}"
+  DOCKER_TAG: "${{ inputs.docker_name }}:${{ github.sha }}"
 
 jobs:
   build:
@@ -40,11 +40,11 @@ jobs:
     - name: Build the Docker image
       run: docker build . --tag "$DOCKER_TAG"
     - name: Login to Docker
-      run: echo "${{ secrets.docker-password }}" | docker login -u "${{ inputs.docker-username }}" --password-stdin
+      run: echo "${{ secrets.docker_password }}" | docker login -u "${{ inputs.docker_username }}" --password-stdin
     - name: Make this Docker image tag the latest
-      run: docker tag "$DOCKER_TAG" "${{ inputs.docker-name }}:latest"
+      run: docker tag "$DOCKER_TAG" "${{ inputs.docker_name }}:latest"
     - name: Push Docker image
-      run: docker image push --all-tags "${{ inputs.docker-name }}"
+      run: docker image push --all-tags "${{ inputs.docker_name }}"
   publish:
     environment: Production
     needs: build
@@ -52,6 +52,6 @@ jobs:
     steps:
     - uses: tale/kubectl-action@v1
       with:
-        base64-kube-config: ${{ secrets.kube-config }}
+        base64-kube-config: ${{ secrets.kube_config }}
     - name: Update Kubernetes deployment
-      run: kubectl set image "deployment/${{ inputs.kube-deployment }}" "main=$DOCKER_TAG"
+      run: kubectl set image "deployment/${{ inputs.kube_deployment }}" "main=$DOCKER_TAG"
