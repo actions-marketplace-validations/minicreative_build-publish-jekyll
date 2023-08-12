@@ -17,15 +17,12 @@ on:
       KUBE_CONFIG:
         description: A base64 encded string of your Kubernetes cluster's config file
         required: true
-        
+
 env:
-  KUBE_DEPLOYMENT: "${{ vars.KUBE_DEPLOYMENT }}"
-  DOCKER_NAME: "${{ vars.DOCKER_NAME }}"
-  DOCKER_TAG: "${{ vars.DOCKER_NAME }}:${{ github.sha }}"
+  DOCKER_TAG: "${{ inputs.DOCKER_NAME }}:${{ github.sha }}"
 
 jobs:
   build:
-    environment: Production
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -40,11 +37,11 @@ jobs:
     - name: Build the Docker image
       run: docker build . --tag "$DOCKER_TAG"
     - name: Login to Docker
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ vars.DOCKER_USERNAME }}" --password-stdin
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ inputs.DOCKER_USERNAME }}" --password-stdin
     - name: Make this Docker image tag the latest
-      run: docker tag "$DOCKER_TAG" "${{ vars.DOCKER_NAME }}:latest"
+      run: docker tag "$DOCKER_TAG" "${{ inputs.DOCKER_NAME }}:latest"
     - name: Push Docker image
-      run: docker image push --all-tags "$DOCKER_NAME"
+      run: docker image push --all-tags "${{ inputs.DOCKER_NAME }}"
   publish:
     environment: Production
     needs: build
@@ -54,4 +51,4 @@ jobs:
       with:
         base64-kube-config: ${{ secrets.KUBE_CONFIG }}
     - name: Update Kubernetes deployment
-      run: kubectl set image "deployment/$KUBE_DEPLOYMENT" "main=$DOCKER_TAG"
+      run: kubectl set image "deployment/${{ inputs.KUBE_DEPLOYMENT }}" "main=$DOCKER_TAG"
